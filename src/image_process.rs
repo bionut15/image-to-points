@@ -1,10 +1,11 @@
+use visioncortex::PathSimplifyMode;
 use vtracer::{ColorMode, Config, Hierarchical};
 
-use crate::vtracer::{Config, ColorMode, Hierarchical, PathSimplifyMode};
+fn convert_to_json() {
 
-fn convert_to_json()  {
 
-    let config = Config {
+
+    let SVG_Setup = Config {
         color_mode: ColorMode::Color,
         hierarchical: Hierarchical::Cutout,
         filter_speckle: 4,

@@ -1,5 +1,3 @@
-use crate::vtracer;
-
 mod image_process;
 
 #[inline]

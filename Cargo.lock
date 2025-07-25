@@ -203,6 +203,7 @@ dependencies = [
 name = "image-to-points"
 version = "0.1.0"
 dependencies = [
+ "visioncortex",
  "vtracer",
 ]
 

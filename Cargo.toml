@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 vtracer = "0.6.3"
+visioncortex = "0.8.8"
