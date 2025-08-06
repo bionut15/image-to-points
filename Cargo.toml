@@ -8,3 +8,6 @@ vtracer = "0.6.3"
 visioncortex = "0.8.8"
 serde_json="1.0.141"
 regex="1.11.1"
+usvg="0.45.1"
+tree="0.4.1"
+
