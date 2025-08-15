@@ -1,8 +1,6 @@
-use serde_json::json;
-
+mod cli;
 mod image_process;
 
-#[inline]
+fn main() {
 
-pub fn Convert_image_to_svg() {}
-fn main() {}
+}

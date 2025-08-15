@@ -6,8 +6,7 @@ edition = "2024"
 [dependencies]
 vtracer = "0.6.3"
 visioncortex = "0.8.8"
-serde_json="1.0.141"
+serde_json="1.0.142"
 regex="1.11.1"
 usvg="0.45.1"
-tree="0.4.1"
-
+tiny-skia-path="0.11.4"

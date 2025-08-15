@@ -1,10 +1,10 @@
-use serde_json::json;
-use usvg::{NodeKind, PathSegment};
 use visioncortex::PathSimplifyMode;
-use vtracer::{ColorImage, ColorMode, Config, Hierarchical, SvgFile, convert};
+use vtracer::{convert, ColorImage, ColorMode, Config, Hierarchical, SvgFile};
+use usvg::Path;
+use tiny_skia_path::Path as OtherPath;
 
 fn convert_to_json(img: ColorImage) {
-    let temp_json: serde_json;
+    //let temp_json: serde_json;
 
     let svg_setup = Config {
         color_mode: ColorMode::Color,
@@ -27,48 +27,19 @@ fn convert_to_json(img: ColorImage) {
 
 fn get_coordinates_from_svg(input_image: Result<SvgFile, String>) {
     /*
-    delete the first two linesZZ
+    delete the first two lines
     get the x and y coordiantes
     if its M its .5 value and if its L  is fixed 1-6
     output  and json file
     */
-
-    let mut points: Vec<(f64, f64, f64)> = Vec::new();
-    let mut colors: Vec<usvg::Color> = Vec::new();
- 
-
-    for node in tree.root().descendants(
-        if let NodeKind::Path(path) = &*node.borrow() {
-            let color = path.fill.as_ref().map(|f| f.paint.to_color()).flatten();
-
-            if let Some(c) = color {
-                colors.push(c);
-            }
-
-            let z_val = if path
-                .data
-                .0
-                .iter()
-                .any(|s| matches!(s, PathSegment::MoveTo { .. }))
-            {
-                0.5
-            } else {
-                1.0            };
-
-            for segment in &path.data.0 {
-                match segment {
-                    PathSegment::MoveTo { x, y } | PathSegment::LineTo { x, y } => {
-                        points.push((*x, *y, z_val));
-                    }
-                    _ => {}
-                }
-            }
-        }
-    }
+    
+    
+    
 }
 
 fn write_to_json(arg: &str) -> &str {
     todo!();
+    
 }
 fn post_to_cli(arg: &str) -> &str {
     todo!();
