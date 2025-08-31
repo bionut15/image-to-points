@@ -1,13 +1,12 @@
-                // PathCommand::MoveTo(x, z) => coords.push(Point {
-                //     x: x * 0.5,
-                //     z: z * 0.5,
-                //     color: color_index,
-                // }),
-                // PathCommand::LineTo(x, z) => coords.push(Point {
-                //     x: ((x.round() as i32).clamp(1, 6)) as f64,
-                //     z: ((z.round() as i32).clamp(1, 6)) as f64,
-                //     color: color_index,
-                // }),
+//     x: x * 0.5,
+//     z: z * 0.5,
+//     color: color_index,
+// }),
+// PathCommand::LineTo(x, z) => coords.push(Point {
+//     x: ((x.round() as i32).clamp(1, 6)) as f64,
+//     z: ((z.round() as i32).clamp(1, 6)) as f64,
+//     color: color_index,
+// }),
 // }
 //
 // fn handle_path(attributes: &svg::node::Attributes) {
@@ -28,13 +27,15 @@
 //         }
 //     }
 // }
+use image_to_points::coord_iter;
+use image_to_points::coord_push;
+use image_to_points::iteration_coord;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use visioncortex::CompoundPathElement;
 use visioncortex::PathSimplifyMode;
 use visioncortex::Point2;
 use vtracer::{convert, ColorImage, ColorMode, Config, Hierarchical, SvgFile};
-
 
 #[derive(Serialize, Deserialize, Debug)]
 struct Point {
@@ -72,24 +73,19 @@ fn get_coordinates_from_svg(
         let color = path.color;
         let avg = ((color.r as u32 + color.g as u32 + color.b as u32 + color.a as u32) / 4) as u8;
         let color_index = (avg % 6 + 1) as u8;
+        let color_index_line = ((avg + 3) % 6 + 1) as u8;
 
-        // path.path is a CompoundPath
         for element in path.path.iter() {
             match element {
                 CompoundPathElement::PathI32(path) => {
-                    // Process PathI32
-                    for point in path.iter() {
-                        println!("PathI32 Point: ({}, {})", point.x, point.y);
-                    }
+                    coord_iter!(path, coords, color_index, color_index_line);
                 }
                 CompoundPathElement::PathF64(path) => {
-                    // Process PathF64
                     for point in path.iter() {
                         println!("PathF64 Point: ({}, {})", point.x, point.y);
                     }
                 }
                 CompoundPathElement::Spline(spline) => {
-                    // Process Spline
                     for point in spline.points.iter() {
                         println!("Spline Point: ({}, {})", point.x, point.y);
                     }
