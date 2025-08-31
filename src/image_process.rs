@@ -1,35 +1,7 @@
-//     x: x * 0.5,
-//     z: z * 0.5,
-//     color: color_index,
-// }),
-// PathCommand::LineTo(x, z) => coords.push(Point {
-//     x: ((x.round() as i32).clamp(1, 6)) as f64,
-//     z: ((z.round() as i32).clamp(1, 6)) as f64,
-//     color: color_index,
-// }),
-// }
-//
-// fn handle_path(attributes: &svg::node::Attributes) {
-//     let stroke = attributes.get("stroke").map_or("none", |v| v);
-//     if let Some(d_attr) = attributes.get("d") {
-//         handle_path_coords(d_attr, stroke);
-//     }
-// }
-//
-// fn handle_path_coords(d_attr: &str, stroke: &str) {
-//     if let Ok(data) = Data::parse(d_attr) {
-//         for command in data.iter() {
-//             match command {
-//                 Command::Move(x, y) => print_point("Move", *x, *y, stroke),
-//                 Command::Line(x, y) => print_point("Line", *x, *y, stroke),
-//                 _ => {}
-//             }
-//         }
-//     }
-// }
 use image_to_points::coord_iter;
 use image_to_points::coord_push;
 use image_to_points::iteration_coord;
+use image_to_points::Iterate_path;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use visioncortex::CompoundPathElement;
@@ -60,7 +32,9 @@ fn convert_to_json(img: ColorImage) -> Result<Value, Box<dyn std::error::Error>>
     };
 
     let memory_svg = convert(img, svg_setup);
-    get_coordinates_from_svg(memory_svg)
+    let final_json_file = get_coordinates_from_svg(memory_svg);
+
+    Ok(final_json_file?)
 }
 
 fn get_coordinates_from_svg(
@@ -72,25 +46,11 @@ fn get_coordinates_from_svg(
     for path in &svg_file.paths {
         let color = path.color;
         let avg = ((color.r as u32 + color.g as u32 + color.b as u32 + color.a as u32) / 4) as u8;
-        let color_index = (avg % 6 + 1) as u8;
+        let color_index_move = (avg % 6 + 1) as u8;
         let color_index_line = ((avg + 3) % 6 + 1) as u8;
 
         for element in path.path.iter() {
-            match element {
-                CompoundPathElement::PathI32(path) => {
-                    coord_iter!(path, coords, color_index, color_index_line);
-                }
-                CompoundPathElement::PathF64(path) => {
-                    for point in path.iter() {
-                        println!("PathF64 Point: ({}, {})", point.x, point.y);
-                    }
-                }
-                CompoundPathElement::Spline(spline) => {
-                    for point in spline.points.iter() {
-                        println!("Spline Point: ({}, {})", point.x, point.y);
-                    }
-                }
-            }
+            Iterate_path!(element, coords, color_index_move, color_index_line);
         }
     }
 
@@ -98,8 +58,5 @@ fn get_coordinates_from_svg(
 }
 
 fn write_to_json(_arg: &str) -> &str {
-    todo!()
-}
-fn post_to_cli(_arg: &str) -> &str {
     todo!()
 }

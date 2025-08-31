@@ -16,7 +16,6 @@ macro_rules! iteration_coord {
         coord_push!($coords, $point, color);
     };
 }
-
 #[macro_export]
 macro_rules! coord_iter {
     ($path:expr, $coords:expr, $color_move:expr, $color_line:expr) => {{
@@ -24,4 +23,21 @@ macro_rules! coord_iter {
             iteration_coord!($coords, point, i, $color_move, $color_line);
         }
     }};
+}
+
+#[macro_export]
+macro_rules! Iterate_path {
+    ($element:expr, $coords:expr, $color_move:expr, $color_line:expr) => {
+        match $element {
+            CompoundPathElement::PathI32(path) => {
+                coord_iter!(path, $coords, $color_move, $color_line);
+            }
+            CompoundPathElement::PathF64(path) => {
+                coord_iter!(path, $coords, $color_move, $color_line);
+            }
+            CompoundPathElement::Spline(path) => {
+                coord_iter!(path, $coords, $color_move, $color_line);
+            }
+        }
+    };
 }
