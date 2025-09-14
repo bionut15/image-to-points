@@ -16,7 +16,9 @@ struct Point {
     color: u8,
 }
 
-fn convert_to_json(img: ColorImage) -> Result<Value, Box<dyn std::error::Error>> {
+
+pub fn convert_to_json(img: ColorImage) -> Result<Value, Box<dyn std::error::Error>> {
+
     let svg_setup = Config {
         color_mode: ColorMode::Color,
         hierarchical: Hierarchical::Stacked,
@@ -31,6 +33,7 @@ fn convert_to_json(img: ColorImage) -> Result<Value, Box<dyn std::error::Error>>
         path_precision: Some(2),
     };
 
+    let img = convert_to_ColorImage(imgpath);
     let memory_svg = convert(img, svg_setup);
     let final_json_file = get_coordinates_from_svg(memory_svg);
 
@@ -57,6 +60,9 @@ fn get_coordinates_from_svg(
     Ok(serde_json::to_value(&coords)?)
 }
 
+pub fn convert_to_ColorImage(path: &str) -> ColorImage {
+
+}
 fn write_to_json(_arg: &str) -> &str {
     todo!()
 }
