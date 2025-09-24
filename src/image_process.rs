@@ -1,9 +1,12 @@
+use std::path::Path;
+use open;
 use image_to_points::coord_iter;
 use image_to_points::coord_push;
 use image_to_points::iteration_coord;
 use image_to_points::Iterate_path;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use vtracer::image_color::ImageColor;
 use visioncortex::CompoundPathElement;
 use visioncortex::PathSimplifyMode;
 use visioncortex::Point2;
@@ -16,9 +19,7 @@ struct Point {
     color: u8,
 }
 
-
-pub fn convert_to_json(img: ColorImage) -> Result<Value, Box<dyn std::error::Error>> {
-
+pub fn convert_image_to_json(path: &str) -> Result<Value, Box<dyn std::error::Error>> {
     let svg_setup = Config {
         color_mode: ColorMode::Color,
         hierarchical: Hierarchical::Stacked,
@@ -33,8 +34,8 @@ pub fn convert_to_json(img: ColorImage) -> Result<Value, Box<dyn std::error::Err
         path_precision: Some(2),
     };
 
-    let img = convert_to_ColorImage(imgpath);
-    let memory_svg = convert(img, svg_setup);
+    let color_image = convert_to_ColorImage(path);
+    let memory_svg = convert(color_image, svg_setup);
     let final_json_file = get_coordinates_from_svg(memory_svg);
 
     Ok(final_json_file?)
@@ -60,9 +61,12 @@ fn get_coordinates_from_svg(
     Ok(serde_json::to_value(&coords)?)
 }
 
-pub fn convert_to_ColorImage(path: &str) -> ColorImage {
+pub fn convert_to_ColorImage(path: &str) -> Result<ImageColor, Box<dyn std::error::Error>> {
 
+    let img = open(path)?.to_rgba8();
+    Ok(ImageColor::from(img))
 }
+
 fn write_to_json(_arg: &str) -> &str {
     todo!()
 }

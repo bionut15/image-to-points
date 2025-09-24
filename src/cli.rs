@@ -19,5 +19,5 @@ struct Args {
 
 pub fn handleinput() {
     let args = Args::parse();
-    convert_to_json(args.inputPath);
+    convert_image_to_json(&args.inputPath);
 }
