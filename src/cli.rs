@@ -27,7 +27,7 @@ pub fn Cli() -> Result<(), Box<dyn std::error::Error>> {
     
     write_to_json(&json_string, &args.outputFile)?;
     
-    println!("{}", json_value);
+    println!("New values \n{}", json_value);
     
     Ok(())
 }
