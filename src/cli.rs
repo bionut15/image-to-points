@@ -1,5 +1,7 @@
 use crate::image_process::*;
 use clap::Parser;
+use std::fs::File;
+use std::io::Write;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -17,8 +19,15 @@ struct Args {
     colorCount: u8,
 }
 
-pub fn handleinput() {
+
+pub fn Cli() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
-    let test = convert_image_to_json(&args.inputPath);
-    println!("ceva{}", test.unwrap());
+    let json_value = convert_image_to_json(&args.inputPath)?;
+    let json_string = serde_json::to_string_pretty(&json_value)?;
+    
+    write_to_json(&json_string, &args.outputFile)?;
+    
+    println!("{}", json_value);
+    
+    Ok(())
 }

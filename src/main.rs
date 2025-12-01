@@ -1,7 +1,7 @@
 mod cli;
 mod image_process;
-use crate::cli::handleinput;
+use crate::cli::Cli;
 
 fn main() {
-    handleinput();
+    Cli();
 }

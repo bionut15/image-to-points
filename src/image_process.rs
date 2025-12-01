@@ -1,4 +1,4 @@
-use image::open; // Now from the image crate
+use image::open;
 use image_to_points::coord_iter;
 use image_to_points::coord_push;
 use image_to_points::iteration_coord;
@@ -11,7 +11,7 @@ use std::path::Path;
 use visioncortex::CompoundPathElement;
 use visioncortex::PathSimplifyMode;
 use visioncortex::Point2;
-use vtracer::ColorImage; // Fixed: ColorImage instead of ImageColor
+use vtracer::ColorImage;
 use vtracer::{convert, ColorMode, Config, Hierarchical, SvgFile};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -70,8 +70,8 @@ pub fn convert_to_ColorImage(path: &str) -> Result<ColorImage, Box<dyn std::erro
     })
 }
 
-fn write_to_json(json_data: &str, output_path: &str) -> Result<(), Box<dyn std::error::Error>> {
+pub fn write_to_json(json_data: &str, output_path: &str) -> Result<(), Box<dyn std::error::Error>> {
     let mut file = File::create(output_path)?;
-    file.write_all(json_data.as_bytes())?;
+    file.write_all(json_data.as_bytes())?;  
     Ok(())
 }
