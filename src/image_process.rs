@@ -1,15 +1,17 @@
-use std::path::Path;
-use image::open;  // Now from the image crate
+use image::open; // Now from the image crate
 use image_to_points::coord_iter;
 use image_to_points::coord_push;
 use image_to_points::iteration_coord;
 use image_to_points::Iterate_path;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use vtracer::ColorImage;  // Fixed: ColorImage instead of ImageColor
+use std::fs::File;
+use std::io::Write;
+use std::path::Path;
 use visioncortex::CompoundPathElement;
 use visioncortex::PathSimplifyMode;
 use visioncortex::Point2;
+use vtracer::ColorImage; // Fixed: ColorImage instead of ImageColor
 use vtracer::{convert, ColorMode, Config, Hierarchical, SvgFile};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -33,6 +35,7 @@ pub fn convert_image_to_json(path: &str) -> Result<Value, Box<dyn std::error::Er
         splice_threshold: 45,
         path_precision: Some(2),
     };
+
     let color_image = convert_to_ColorImage(path)?;
     let memory_svg = convert(color_image, svg_setup);
     get_coordinates_from_svg(memory_svg)
@@ -47,24 +50,28 @@ fn get_coordinates_from_svg(
         let color = path.color;
         let avg = ((color.r as u32 + color.g as u32 + color.b as u32 + color.a as u32) / 4) as u8;
         let color_index_move = (avg % 6 + 1) as u8;
-        let color_index_line = ((avg + 3) % 6 + 1) as u8;
+        let color_index_line = ((avg.wrapping_add(3) % 6) + 1) as u8;
         for element in path.path.iter() {
             Iterate_path!(element, coords, color_index_move, color_index_line);
         }
     }
+
     Ok(serde_json::to_value(&coords)?)
 }
 
 pub fn convert_to_ColorImage(path: &str) -> Result<ColorImage, Box<dyn std::error::Error>> {
     let img = open(path)?.to_rgba8();
     let (width, height) = img.dimensions();
-    
+
     Ok(ColorImage {
         pixels: img.into_raw(),
         width: width as usize,
         height: height as usize,
     })
 }
-fn write_to_json(_arg: &str) -> &str {
-    todo!()
+
+fn write_to_json(json_data: &str, output_path: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let mut file = File::create(output_path)?;
+    file.write_all(json_data.as_bytes())?;
+    Ok(())
 }

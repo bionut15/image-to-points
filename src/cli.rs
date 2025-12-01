@@ -19,5 +19,6 @@ struct Args {
 
 pub fn handleinput() {
     let args = Args::parse();
-    convert_image_to_json(&args.inputPath);
+    let test = convert_image_to_json(&args.inputPath);
+    println!("ceva{}", test.unwrap());
 }
