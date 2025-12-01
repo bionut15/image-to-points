@@ -6,10 +6,9 @@ Rust based library made to convert images for plotting devices in json.
 
 Example code:
 
-''
+```
 cargo run -- --output-file "test.json" --input-path "Image_example/export-2025-07-27\ 121945.svg"
-
-''
+```
 
 # To do
 
